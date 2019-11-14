@@ -56,18 +56,18 @@
         }
     },
     "variables": {
-        "virtualNetworkName": "adVNET",
-        "virtualNetworkAddressRange": "10.0.0.0/16",
+        "virtualNetworkName": "demo-vnet",
+        "virtualNetworkAddressRange": "10.0.0.0/22",
         "adLBFE": "LBFE",
         "adLBBE": "LBBE",
         "adRDPNAT": "adRDP",
-        "adNicName": "adNic",
+        "adNicName": "demo-dc-nic",
         "adNicIPAddress": "10.0.0.4",
-        "adVMName": "adVM",
-        "adSubnetName": "adSubnet",
+        "adVMName": "demo-dc",
+        "adSubnetName": "demo-subnet",
         "adSubnetAddressPrefix": "10.0.0.0/24",
-        "publicIPAddressName": "adPublicIP",
-        "adAvailabilitySetName": "adAvailabiltySet",
+        "publicIPAddressName": "demo-dc-pip",
+        "adAvailabilitySetName": "demo-dc-AvailabiltySet",
         "adLBName": "adLoadBalancer"
     },
     "resources": [
