@@ -194,7 +194,7 @@
       {
         "apiVersion": "2015-06-15",
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('dnsLabelPrefix'),'/joindomain')]",
+        "name": "[concat(variables('clVMName'),'/joindomain')]",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[concat('Microsoft.Compute/virtualMachines/', variables('clVMName'))]"
