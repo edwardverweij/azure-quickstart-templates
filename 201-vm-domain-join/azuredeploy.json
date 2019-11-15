@@ -22,7 +22,7 @@
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_A2",
+        "defaultValue": "Standard_A1",
         "metadata": {
           "description": "The size of the virtual machines"
         }
@@ -85,8 +85,8 @@
       "imageOffer": "WindowsServer",
       "windowsOSVersion": "2016-Datacenter",
       "clVMName": "demo-cl",
-      "nicName": "[concat(parameters('dnsLabelPrefix'),'Nic')]",
-      "publicIPName": "[concat(parameters('dnsLabelPrefix'),'Pip')]",
+      "nicName": "[concat(variables('clVMName'),'-nic')]",
+      "publicIPName": "[concat(variables('clVMName'),'-pip')]",
       "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingSubnetName'))]"
     },
     "resources": [
