@@ -26,6 +26,12 @@
           "description": "The address range of the subnet created in the new VNET"
         }
       },
+      "DNSServerAddress": {
+        "type": "array",
+        "metadata": {
+          "description": "The DNS address(es) of the DNS Server(s) used by the VNET"
+        }
+      },
       "location": {
         "type": "string",
         "metadata": {
@@ -35,7 +41,7 @@
     },
     "variables": {
     "VnetSubnetNsgName": "[concat(parameters('subnetName'),'-nsg')]",
-  },
+  },    
     "resources": [
     {
       "apiVersion": "2017-09-01",
@@ -47,7 +53,8 @@
         "securityRules": [          
         ]
       }
-    },      {
+    },
+      {
         "type": "Microsoft.Network/virtualNetworks",
         "name": "[parameters('virtualNetworkName')]",
         "apiVersion": "2019-02-01",
@@ -57,6 +64,9 @@
             "addressPrefixes": [
               "[parameters('virtualNetworkAddressRange')]"
             ]
+          },
+          "dhcpOptions": {
+            "dnsServers": "[parameters('DNSServerAddress')]"
           },
           "subnets": [
             {
