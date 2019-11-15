@@ -58,17 +58,13 @@
     "variables": {
         "virtualNetworkName": "demo-vnet",
         "virtualNetworkAddressRange": "10.0.0.0/22",
-        "adLBFE": "LBFE",
-        "adLBBE": "LBBE",
-        "adRDPNAT": "adRDP",
         "adNicName": "demo-dc-nic",
         "adNicIPAddress": "10.0.0.4",
         "adVMName": "demo-dc",
         "adSubnetName": "demo-subnet",
         "adSubnetAddressPrefix": "10.0.0.0/24",
         "publicIPAddressName": "demo-dc-pip",
-        "adAvailabilitySetName": "demo-dc-AvailabiltySet",
-        "adLBName": "adLoadBalancer"
+        "adAvailabilitySetName": "demo-dc-AvailabiltySet"
     },
     "resources": [
         {
@@ -126,53 +122,13 @@
             }
         },
         {
-            "type": "Microsoft.Network/loadBalancers",
-            "apiVersion": "2019-02-01",
-            "name": "[variables('adLBName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[variables('publicIPAddressName')]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "[variables('adLBFE')]",
-                        "properties": {
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-                            }
-                        }
-                    }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "[variables('adLBBE')]"
-                    }
-                ],
-                "inboundNatRules": [
-                    {
-                        "name": "[variables('adRDPNAT')]",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('adLBName'), variables('adLBFE'))]"
-                            },
-                            "protocol": "Tcp",
-                            "frontendPort": 3389,
-                            "backendPort": 3389,
-                            "enableFloatingIP": false
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-02-01",
             "name": "[variables('adNicName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "VNet",
-                "[variables('adLBName')]"
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "VNet"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -181,19 +137,12 @@
                         "properties": {
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[variables('adNicIPAddress')]",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                            },    
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('adSubnetName'))]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('adLBName'), variables('adLBBE'))]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', variables('adLBName'), variables('adRDPNAT'))]"
-                                }
-                            ]
+                            }
                         }
                     }
                 ]
@@ -206,8 +155,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[variables('adNicName')]",
-                "[variables('adAvailabilitySetName')]",
-                "[variables('adLBName')]"
+                "[variables('adAvailabilitySetName')]"
             ],
             "properties": {
                 "hardwareProfile": {
