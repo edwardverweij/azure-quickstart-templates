@@ -71,6 +71,12 @@
           "description": "The password for the administrator account of the new VM and the domain"
         }
       },
+      "vmname": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'admin','administrator"
+        }
+      },      
       "location": {
         "type": "string",
         "defaultValue": "[resourceGroup().location]",
@@ -84,9 +90,8 @@
       "imagePublisher": "MicrosoftWindowsServer",
       "imageOffer": "WindowsServer",
       "windowsOSVersion": "2016-Datacenter",
-      "clVMName": "demo-cl",
-      "nicName": "[concat(variables('clVMName'),'-nic')]",
-      "publicIPName": "[concat(variables('clVMName'),'-pip')]",
+      "nicName": "[concat(parameters('vmname'),'-nic')]",
+      "publicIPName": "[concat(parameters('vmname'),'-pip')]",
       "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingSubnetName'))]"
     },
     "resources": [
@@ -139,7 +144,7 @@
       {
         "apiVersion": "2017-03-30",
         "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('clVMName')]",
+        "name": "[parameters('vmname')]",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))]",
@@ -150,7 +155,7 @@
             "vmSize": "[parameters('vmSize')]"
           },
           "osProfile": {
-            "computerName": "[variables('clVMName')]",
+            "computerName": "[parameters('vmname')]",
             "adminUsername": "[parameters('vmAdminUsername')]",
             "adminPassword": "[parameters('vmAdminPassword')]"
           },
@@ -162,13 +167,13 @@
               "version": "latest"
             },
             "osDisk": {
-              "name": "[concat(variables('clVMName'),'_OsDisk')]",
+              "name": "[concat(parameters('vmname'),'_OsDisk')]",
               "caching": "ReadWrite",
               "createOption": "FromImage"
             },
             "dataDisks": [
               {
-                "name": "[concat(variables('clVMName'),'_dataDisk1')]",
+                "name": "[concat(parameters('vmname'),'_dataDisk1')]",
                 "caching": "None",
                 "createOption": "Empty",
                 "diskSizeGB": "1000",
@@ -194,10 +199,10 @@
       {
         "apiVersion": "2015-06-15",
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('clVMName'),'/joindomain')]",
+        "name": "[concat(parameters('vmname'),'/joindomain')]",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', variables('clVMName'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('vmname'))]"
         ],
         "properties": {
           "publisher": "Microsoft.Compute",
