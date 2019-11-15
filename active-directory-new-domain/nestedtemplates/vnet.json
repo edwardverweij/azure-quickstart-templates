@@ -35,6 +35,7 @@
     },
     "variables": {
     "VnetSubnetNsgName": "[concat(parameters('subnetName'),'-nsg')]",
+    "VnetSubnetNsgId": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('VnetSubnetNsgName'))]"
   },
     "resources": [
     {
@@ -63,7 +64,10 @@
             {
               "name": "[parameters('subnetName')]",
               "properties": {
-                "addressPrefix": "[parameters('subnetRange')]"
+                "addressPrefix": "[parameters('subnetRange')]",
+                "networkSecurityGroup": {
+                "id": "[variables('VnetSubnetNsgId')]"
+              }                
               }
             }
           ]
