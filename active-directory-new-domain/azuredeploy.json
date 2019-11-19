@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "adminUsername": {
@@ -28,7 +28,7 @@
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_B2s",
             "metadata": {
                 "description": "Size of the VM for the controller"
             }
@@ -56,15 +56,19 @@
         }
     },
     "variables": {
-        "virtualNetworkName": "demo-vnet",
+        "NamePrefix": "demo",
         "virtualNetworkAddressRange": "10.0.0.0/22",
-        "adNicName": "demo-dc-nic",
+        "adSubnetAddressPrefix": "10.0.0.0/24",        
         "adNicIPAddress": "10.0.0.4",
-        "adVMName": "demo-dc",
-        "adSubnetName": "demo-subnet",
-        "adSubnetAddressPrefix": "10.0.0.0/24",
-        "publicIPAddressName": "demo-dc-pip",
-        "adAvailabilitySetName": "demo-dc-AvailabiltySet"
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
+        "windowsOSVersion": "2016-Datacenter",        
+        "adVMName": "[concat(variables('NamePrefix'),'-dc')]",
+        "virtualNetworkName": "[concat(variables('NamePrefix'),'-vnet')]",
+        "adSubnetName": "[concat(variables('NamePrefix'),'-subnet')]",
+        "adNicName": "[concat(variables('adVMName'),'-nic')]",
+        "publicIPAddressName": "[concat(variables('adVMName'),'-pip')]",
+        "adAvailabilitySetName": "[concat(variables('adVMName'),'-availabiltySet')]"
     },
     "resources": [
         {
@@ -94,7 +98,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2017-05-10",
             "name": "VNet",
             "properties": {
                 "mode": "Incremental",
@@ -171,9 +175,9 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('windowsOSVersion')]",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -241,7 +245,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-11-01",
+            "apiVersion": "2017-05-10",
             "name": "UpdateVNetDNS",
             "dependsOn": [
                 "CreateADForest"
