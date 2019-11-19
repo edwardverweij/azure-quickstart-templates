@@ -68,7 +68,7 @@
         "adSubnetName": "[concat(variables('NamePrefix'),'-subnet')]",
         "adNicName": "[concat(variables('adVMName'),'-nic')]",
         "publicIPAddressName": "[concat(variables('adVMName'),'-pip')]",
-        "adAvailabilitySetName": "[concat(variables('adVMName'),'-availabiltySet')]"
+        "adAvailabilitySetName": "[concat(variables('adVMName'),'-availabiltyset')]"
     },
     "resources": [
         {
