@@ -89,7 +89,7 @@
       "storageAccountName": "[concat(uniquestring(resourceGroup().id, deployment().name))]",
       "imagePublisher": "MicrosoftWindowsServer",
       "imageOffer": "WindowsServer",
-      "windowsOSVersion": "2016-Datacenter",
+      "windowsOSVersion": "2019-Datacenter",
       "nicName": "[concat(parameters('vmname'),'-nic')]",
       "publicIPName": "[concat(parameters('vmname'),'-pip')]",
       "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingSubnetName'))]"
