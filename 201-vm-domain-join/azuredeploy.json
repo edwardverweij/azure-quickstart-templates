@@ -76,7 +76,23 @@
         "metadata": {
           "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'admin','administrator"
         }
-      },      
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2016-Datacenter",
+        "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "2016-Nano-Server",
+        "2016-Datacenter-with-Containers",
+        "2016-Datacenter",
+        "2019-Datacenter"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+      }
+    },        
       "location": {
         "type": "string",
         "defaultValue": "[resourceGroup().location]",
@@ -89,7 +105,6 @@
       "storageAccountName": "[concat(uniquestring(resourceGroup().id, deployment().name))]",
       "imagePublisher": "MicrosoftWindowsServer",
       "imageOffer": "WindowsServer",
-      "windowsOSVersion": "2019-Datacenter",
       "nicName": "[concat(parameters('vmname'),'-nic')]",
       "publicIPName": "[concat(parameters('vmname'),'-pip')]",
       "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingSubnetName'))]"
@@ -163,7 +178,7 @@
             "imageReference": {
               "publisher": "[variables('imagePublisher')]",
               "offer": "[variables('imageOffer')]",
-              "sku": "[variables('windowsOSVersion')]",
+              "sku": "[parameters('windowsOSVersion')]",
               "version": "latest"
             },
             "osDisk": {
